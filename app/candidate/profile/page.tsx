@@ -6,11 +6,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { User, Award, TrendingUp } from "lucide-react";
+import { User, Award, FileText, Download } from "lucide-react";
 import Link from "next/link";
 
 export default function CandidateProfilePage() {
   const candidate = useQuery(api.candidates.getCurrentCandidate);
+  const fileUrl = useQuery(
+    api.candidates.getResumeFileUrl,
+    candidate?.resumeFileId ? { storageId: candidate.resumeFileId } : "skip"
+  );
 
   if (candidate === undefined) {
     return (
@@ -43,38 +47,28 @@ export default function CandidateProfilePage() {
     );
   }
 
-  const getScoreBadgeVariant = (score: number) => {
-    if (score >= 80) return "default";
-    if (score >= 60) return "secondary";
-    return "outline";
-  };
-
-  const getScoreColor = (score: number) => {
-    if (score >= 80) return "text-green-600";
-    if (score >= 60) return "text-yellow-600";
-    return "text-red-600";
-  };
 
   return (
-    <div className="min-h-screen bg-background p-4">
+    <div className="p-4">
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold">Your AI Profile</h1>
+            <h1 className="text-3xl font-bold">Your Resume Profile</h1>
             <p className="text-muted-foreground">
               Your résumé has been analyzed and processed
             </p>
           </div>
-          <div className="flex items-center space-x-2">
-            <TrendingUp className="h-5 w-5 text-muted-foreground" />
-            <Badge 
-              variant={getScoreBadgeVariant(candidate.latentScore)}
-              className={`${getScoreColor(candidate.latentScore)} font-bold`}
+          {fileUrl && (
+            <a 
+              href={fileUrl} 
+              download="resume.pdf"
+              className="flex items-center space-x-2 text-primary hover:text-primary/80"
             >
-              Latent Score: {Math.round(candidate.latentScore)}
-            </Badge>
-          </div>
+              <Download className="h-5 w-5" />
+              <span>Download PDF</span>
+            </a>
+          )}
         </div>
 
         <div className="grid gap-6 md:grid-cols-2">
@@ -105,59 +99,54 @@ export default function CandidateProfilePage() {
             </CardContent>
           </Card>
 
-          {/* Profile Summary */}
+          {/* Resume File */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
-                <User className="h-5 w-5" />
-                <span>Profile Summary</span>
+                <FileText className="h-5 w-5" />
+                <span>Resume File</span>
               </CardTitle>
               <CardDescription>
-                AI-generated insights about your background
+                Your uploaded resume document
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
                 <div>
                   <h4 className="font-semibold text-sm text-muted-foreground">
-                    LATENT SCORE BREAKDOWN
-                  </h4>
-                  <div className="flex items-center space-x-2">
-                    <div className="flex-1 bg-muted rounded-full h-2">
-                      <div 
-                        className={`h-2 rounded-full transition-all duration-500 ${
-                          candidate.latentScore >= 80 ? 'bg-green-500' :
-                          candidate.latentScore >= 60 ? 'bg-yellow-500' : 
-                          'bg-red-500'
-                        }`}
-                        style={{ width: `${Math.min(candidate.latentScore, 100)}%` }}
-                      />
-                    </div>
-                    <span className="text-sm font-medium">
-                      {Math.round(candidate.latentScore)}/100
-                    </span>
-                  </div>
-                </div>
-                
-                <Separator />
-                
-                <div>
-                  <h4 className="font-semibold text-sm text-muted-foreground">
-                    RESUME UPLOADED
+                    UPLOADED
                   </h4>
                   <p className="text-sm">
                     {new Date(candidate.createdAt).toLocaleDateString()}
                   </p>
                 </div>
                 
+                <Separator />
+                
                 <div>
                   <h4 className="font-semibold text-sm text-muted-foreground">
-                    SKILLS COUNT
+                    SKILLS DETECTED
                   </h4>
                   <p className="text-sm">
                     {candidate.skills.length} technical skills identified
                   </p>
                 </div>
+                
+                {fileUrl && (
+                  <>
+                    <Separator />
+                    <div className="flex justify-center">
+                      <a 
+                        href={fileUrl} 
+                        download="resume.pdf"
+                        className="inline-flex items-center space-x-2 px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+                      >
+                        <Download className="h-4 w-4" />
+                        <span>Download Resume</span>
+                      </a>
+                    </div>
+                  </>
+                )}
               </div>
             </CardContent>
           </Card>
@@ -168,14 +157,13 @@ export default function CandidateProfilePage() {
           <CardHeader>
             <CardTitle>Extracted Resume Text</CardTitle>
             <CardDescription>
-              Text extracted from your PDF for analysis
+              Complete text content extracted from your PDF
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="bg-muted p-4 rounded-lg max-h-64 overflow-y-auto">
+            <div className="bg-muted p-4 rounded-lg max-h-96 overflow-y-auto">
               <pre className="text-sm whitespace-pre-wrap font-mono">
-                {candidate.resumeText.substring(0, 1000)}
-                {candidate.resumeText.length > 1000 && "..."}
+                {candidate.resumeText}
               </pre>
             </div>
           </CardContent>

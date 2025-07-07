@@ -14,13 +14,13 @@ import { SignInButton } from "@clerk/nextjs";
 import { UserButton } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, Briefcase, TrendingUp, Award } from "lucide-react";
+import { Users, Briefcase } from "lucide-react";
 
 export default function Home() {
   return (
     <>
       <header className="sticky top-0 z-10 bg-background p-4 border-b border-border flex flex-row justify-between items-center">
-        <h1 className="text-xl font-bold">Latent Talent Graph</h1>
+        <h1 className="text-xl font-bold">JobMosaic</h1>
         <UserButton />
       </header>
       <main className="min-h-screen">
@@ -70,7 +70,7 @@ function LandingPage() {
       <div className="container mx-auto px-4 py-16">
         <div className="text-center max-w-4xl mx-auto">
           <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-            Latent Talent Graph
+            JobMosaic
           </h1>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
             AI-powered talent matching platform that connects top AI engineers with the best opportunities. 
@@ -188,32 +188,6 @@ function LandingPage() {
         </div>
       </div>
 
-      {/* Stats Section */}
-      <div className="container mx-auto px-4 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-3xl mx-auto">
-          <div className="text-center">
-            <div className="w-12 h-12 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-3">
-              <TrendingUp className="h-6 w-6" />
-            </div>
-            <h3 className="text-2xl font-bold">AI-Powered</h3>
-            <p className="text-muted-foreground">Advanced matching algorithms</p>
-          </div>
-          <div className="text-center">
-            <div className="w-12 h-12 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-3">
-              <Award className="h-6 w-6" />
-            </div>
-            <h3 className="text-2xl font-bold">Latent Scoring</h3>
-            <p className="text-muted-foreground">Objective candidate assessment</p>
-          </div>
-          <div className="text-center">
-            <div className="w-12 h-12 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-3">
-              <Users className="h-6 w-6" />
-            </div>
-            <h3 className="text-2xl font-bold">Real-time</h3>
-            <p className="text-muted-foreground">Instant match updates</p>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }

@@ -54,7 +54,7 @@ export default function OnboardingPage() {
     <div className="min-h-screen flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle>Welcome to Latent Talent Graph</CardTitle>
+          <CardTitle>Welcome to JobMosaic</CardTitle>
           <CardDescription>
             Choose your role to get started
           </CardDescription>

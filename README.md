@@ -1,4 +1,4 @@
-# Latent Talent Graph
+# JobMosaic
 
 AI-powered talent matching platform that connects AI engineers with recruiters using semantic search and automated scoring.
 

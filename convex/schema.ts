@@ -13,6 +13,7 @@ export default defineSchema({
     embedding: v.array(v.float64()),
     skills: v.array(v.string()),
     latentScore: v.float64(),
+    resumeFileId: v.optional(v.id("_storage")),
     createdAt: v.number()
   }).vectorIndex("byEmbedding", {
     vectorField: "embedding",

@@ -3,67 +3,52 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Upload, FileText, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
+import { UploadDropzone } from "@/lib/uploadthing";
 
 export default function CandidateOnboardPage() {
   const { user } = useUser();
   const router = useRouter();
-  const [file, setFile] = useState<File | null>(null);
-  const [isUploading, setIsUploading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState("");
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [processingStatus, setProcessingStatus] = useState("");
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target.files?.[0];
-    if (selectedFile && selectedFile.type === "application/pdf") {
-      setFile(selectedFile);
-    } else {
-      alert("Please select a PDF file");
-    }
-  };
-
-  const handleUpload = async () => {
-    if (!file || !user) return;
-
-    setIsUploading(true);
-    setUploadProgress("Uploading file...");
-
+  const processResumeFromUrl = async (fileUrl: string) => {
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("userId", user.id);
+      setIsProcessing(true);
+      setProcessingStatus("Processing PDF...");
 
-      setUploadProgress("Processing PDF...");
-      const response = await fetch("/api/upload", {
+      const response = await fetch("/api/process-resume", {
         method: "POST",
-        body: formData,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ fileUrl }),
       });
 
       if (!response.ok) {
-        throw new Error("Upload failed");
+        throw new Error("Processing failed");
       }
 
       await response.json();
-      setUploadProgress("Generating AI insights...");
+      setProcessingStatus("Complete! Redirecting...");
       
-      // Small delay to show progress
+      // Small delay to show completion
       await new Promise(resolve => setTimeout(resolve, 1000));
       
       router.push("/candidate/profile");
     } catch (error) {
-      console.error("Upload error:", error);
-      alert("Upload failed. Please try again.");
+      console.error("Processing error:", error);
+      alert(`Processing failed: ${error}`);
     } finally {
-      setIsUploading(false);
-      setUploadProgress("");
+      setIsProcessing(false);
+      setProcessingStatus("");
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
+    <div className="flex items-center justify-center p-4 min-h-[calc(100vh-120px)]">
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle>Upload Your Résumé</CardTitle>
@@ -72,66 +57,30 @@ export default function CandidateOnboardPage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          {!file ? (
+          {!isProcessing ? (
             <div className="space-y-4">
-              <Label htmlFor="resume">Select PDF Résumé</Label>
-              <div className="border-2 border-dashed border-border rounded-lg p-6 text-center">
-                <Upload className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-                <div className="space-y-2">
-                  <p className="text-sm text-muted-foreground">
-                    Drop your PDF here or click to browse
-                  </p>
-                  <Input
-                    id="resume"
-                    type="file"
-                    accept=".pdf"
-                    onChange={handleFileChange}
-                    className="cursor-pointer"
-                  />
-                </div>
-              </div>
+              <Label>Upload PDF Résumé</Label>
+              <UploadDropzone
+                endpoint="resumeUploader"
+                onClientUploadComplete={(res) => {
+                  console.log("Files: ", res);
+                  if (res?.[0]?.url) {
+                    processResumeFromUrl(res[0].url);
+                  }
+                }}
+                onUploadError={(error: Error) => {
+                  alert(`Upload Error! ${error.message}`);
+                }}
+              />
             </div>
           ) : (
-            <div className="space-y-4">
-              <Label>Selected File</Label>
-              <div className="flex items-center space-x-3 p-3 border rounded-lg">
-                <FileText className="h-8 w-8 text-red-500" />
-                <div className="flex-1">
-                  <p className="font-medium">{file.name}</p>
-                  <p className="text-sm text-muted-foreground">
-                    {(file.size / (1024 * 1024)).toFixed(2)} MB
-                  </p>
-                </div>
+            <div className="space-y-4 text-center">
+              <div className="flex items-center justify-center space-x-2">
+                <Loader2 className="h-6 w-6 animate-spin" />
+                <span>Processing Resume...</span>
               </div>
-              
-              <div className="flex space-x-2">
-                <Button
-                  variant="outline"
-                  onClick={() => setFile(null)}
-                  className="flex-1"
-                >
-                  Change File
-                </Button>
-                <Button
-                  onClick={handleUpload}
-                  disabled={isUploading}
-                  className="flex-1"
-                >
-                  {isUploading ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Upload
-                    </>
-                  ) : (
-                    "Upload & Process"
-                  )}
-                </Button>
-              </div>
-              
-              {uploadProgress && (
-                <div className="text-center">
-                  <p className="text-sm text-muted-foreground">{uploadProgress}</p>
-                </div>
+              {processingStatus && (
+                <p className="text-sm text-muted-foreground">{processingStatus}</p>
               )}
             </div>
           )}
