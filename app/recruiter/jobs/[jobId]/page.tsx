@@ -8,20 +8,30 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, User, Mail, RefreshCw, CheckCircle } from "lucide-react";
 import Link from "next/link";
 import { Id } from "@/convex/_generated/dataModel";
+import { useState, useEffect } from "react";
 
 interface Props {
-  params: {
+  params: Promise<{
     jobId: string;
-  };
+  }>;
 }
 
 export default function JobDetailPage({ params }: Props) {
-  const jobId = params.jobId as Id<"jobs">;
-  const job = useQuery(api.jobs.getJobById, { jobId });
-  const matches = useQuery(api.jobs.getMatchesForJob, { jobId });
+  const [jobId, setJobId] = useState<Id<"jobs"> | null>(null);
+  
+  useEffect(() => {
+    params.then(resolvedParams => {
+      setJobId(resolvedParams.jobId as Id<"jobs">);
+    });
+  }, [params]);
+
+  const job = useQuery(api.jobs.getJobById, jobId ? { jobId } : "skip");
+  const matches = useQuery(api.jobs.getMatchesForJob, jobId ? { jobId } : "skip");
   const requestIntro = useMutation(api.messages.requestIntro);
 
   const handleIntroRequest = async (candidateId: Id<"candidates">) => {
+    if (!jobId) return;
+    
     try {
       await requestIntro({
         jobId,
@@ -47,7 +57,7 @@ export default function JobDetailPage({ params }: Props) {
     return "text-orange-600";
   };
 
-  if (job === undefined || matches === undefined) {
+  if (!jobId || job === undefined || matches === undefined) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">

@@ -2,18 +2,19 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import {
-  Authenticated,
-  Unauthenticated,
-  useQuery,
-  useConvexAuth,
-} from "convex/react";
+import { Authenticated, Unauthenticated, useQuery } from "convex/react";
 import { api } from "../convex/_generated/api";
 import { SignUpButton } from "@clerk/nextjs";
 import { SignInButton } from "@clerk/nextjs";
 import { UserButton } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Users, Briefcase } from "lucide-react";
 
 export default function Home() {
@@ -73,8 +74,9 @@ function LandingPage() {
             JobMosaic
           </h1>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            AI-powered talent matching platform that connects top AI engineers with the best opportunities. 
-            Upload your résumé or post a job to get started.
+            AI-powered talent matching platform that connects top AI engineers
+            with the best opportunities. Upload your résumé or post a job to get
+            started.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <SignUpButton mode="modal">
@@ -96,8 +98,8 @@ function LandingPage() {
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold mb-4">How It Works</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Our AI analyzes résumés and job descriptions to create perfect matches, 
-            saving time for both candidates and recruiters.
+            Our AI analyzes résumés and job descriptions to create perfect
+            matches, saving time for both candidates and recruiters.
           </p>
         </div>
 
@@ -120,7 +122,9 @@ function LandingPage() {
                 </div>
                 <div>
                   <p className="font-medium">Upload Your Résumé</p>
-                  <p className="text-sm text-muted-foreground">AI extracts your skills and experience</p>
+                  <p className="text-sm text-muted-foreground">
+                    AI extracts your skills and experience
+                  </p>
                 </div>
               </div>
               <div className="flex items-start space-x-3">
@@ -129,7 +133,9 @@ function LandingPage() {
                 </div>
                 <div>
                   <p className="font-medium">Get Your Latent Score</p>
-                  <p className="text-sm text-muted-foreground">AI rates your fit for AI engineering roles</p>
+                  <p className="text-sm text-muted-foreground">
+                    AI rates your fit for AI engineering roles
+                  </p>
                 </div>
               </div>
               <div className="flex items-start space-x-3">
@@ -138,7 +144,9 @@ function LandingPage() {
                 </div>
                 <div>
                   <p className="font-medium">Get Matched</p>
-                  <p className="text-sm text-muted-foreground">Recruiters find you automatically</p>
+                  <p className="text-sm text-muted-foreground">
+                    Recruiters find you automatically
+                  </p>
                 </div>
               </div>
             </CardContent>
@@ -162,7 +170,9 @@ function LandingPage() {
                 </div>
                 <div>
                   <p className="font-medium">Post a Job</p>
-                  <p className="text-sm text-muted-foreground">Paste your job description</p>
+                  <p className="text-sm text-muted-foreground">
+                    Paste your job description
+                  </p>
                 </div>
               </div>
               <div className="flex items-start space-x-3">
@@ -171,7 +181,9 @@ function LandingPage() {
                 </div>
                 <div>
                   <p className="font-medium">AI Finds Matches</p>
-                  <p className="text-sm text-muted-foreground">Vector search ranks candidates by fit</p>
+                  <p className="text-sm text-muted-foreground">
+                    Vector search ranks candidates by fit
+                  </p>
                 </div>
               </div>
               <div className="flex items-start space-x-3">
@@ -180,15 +192,15 @@ function LandingPage() {
                 </div>
                 <div>
                   <p className="font-medium">Request Intros</p>
-                  <p className="text-sm text-muted-foreground">Connect with top candidates instantly</p>
+                  <p className="text-sm text-muted-foreground">
+                    Connect with top candidates instantly
+                  </p>
                 </div>
               </div>
             </CardContent>
           </Card>
         </div>
       </div>
-
     </div>
   );
 }
-

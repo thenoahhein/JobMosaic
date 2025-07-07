@@ -2,18 +2,24 @@
 
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { User, Award, FileText, Download } from "lucide-react";
+import { Award, FileText, Download } from "lucide-react";
 import Link from "next/link";
 
 export default function CandidateProfilePage() {
   const candidate = useQuery(api.candidates.getCurrentCandidate);
   const fileUrl = useQuery(
     api.candidates.getResumeFileUrl,
-    candidate?.resumeFileId ? { storageId: candidate.resumeFileId } : "skip"
+    candidate?.resumeFileId ? { storageId: candidate.resumeFileId } : "skip",
   );
 
   if (candidate === undefined) {
@@ -47,7 +53,6 @@ export default function CandidateProfilePage() {
     );
   }
 
-
   return (
     <div className="p-4">
       <div className="max-w-4xl mx-auto space-y-6">
@@ -60,8 +65,8 @@ export default function CandidateProfilePage() {
             </p>
           </div>
           {fileUrl && (
-            <a 
-              href={fileUrl} 
+            <a
+              href={fileUrl}
               download="resume.pdf"
               className="flex items-center space-x-2 text-primary hover:text-primary/80"
             >
@@ -106,9 +111,7 @@ export default function CandidateProfilePage() {
                 <FileText className="h-5 w-5" />
                 <span>Resume File</span>
               </CardTitle>
-              <CardDescription>
-                Your uploaded resume document
-              </CardDescription>
+              <CardDescription>Your uploaded resume document</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
@@ -120,9 +123,9 @@ export default function CandidateProfilePage() {
                     {new Date(candidate.createdAt).toLocaleDateString()}
                   </p>
                 </div>
-                
+
                 <Separator />
-                
+
                 <div>
                   <h4 className="font-semibold text-sm text-muted-foreground">
                     SKILLS DETECTED
@@ -131,13 +134,13 @@ export default function CandidateProfilePage() {
                     {candidate.skills.length} technical skills identified
                   </p>
                 </div>
-                
+
                 {fileUrl && (
                   <>
                     <Separator />
                     <div className="flex justify-center">
-                      <a 
-                        href={fileUrl} 
+                      <a
+                        href={fileUrl}
                         download="resume.pdf"
                         className="inline-flex items-center space-x-2 px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
                       >
@@ -172,13 +175,9 @@ export default function CandidateProfilePage() {
         {/* Actions */}
         <div className="flex justify-center space-x-4">
           <Link href="/candidate/onboard">
-            <Button variant="outline">
-              Upload New Resume
-            </Button>
+            <Button variant="outline">Upload New Resume</Button>
           </Link>
-          <Button>
-            View Matching Jobs
-          </Button>
+          <Button>View Matching Jobs</Button>
         </div>
       </div>
     </div>

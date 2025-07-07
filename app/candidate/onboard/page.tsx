@@ -2,14 +2,18 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
 import { UploadDropzone } from "@/lib/uploadthing";
 
 export default function CandidateOnboardPage() {
-  const { user } = useUser();
   const router = useRouter();
   const [isProcessing, setIsProcessing] = useState(false);
   const [processingStatus, setProcessingStatus] = useState("");
@@ -33,10 +37,10 @@ export default function CandidateOnboardPage() {
 
       await response.json();
       setProcessingStatus("Complete! Redirecting...");
-      
+
       // Small delay to show completion
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
       router.push("/candidate/profile");
     } catch (error) {
       console.error("Processing error:", error);
@@ -80,7 +84,9 @@ export default function CandidateOnboardPage() {
                 <span>Processing Resume...</span>
               </div>
               {processingStatus && (
-                <p className="text-sm text-muted-foreground">{processingStatus}</p>
+                <p className="text-sm text-muted-foreground">
+                  {processingStatus}
+                </p>
               )}
             </div>
           )}
