@@ -3,7 +3,6 @@ import { auth } from "@clerk/nextjs/server";
 import { ConvexHttpClient } from "convex/browser";
 import { api } from "@/convex/_generated/api";
 import OpenAI from "openai";
-import pdfParse from "pdf-parse";
 
 const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
 const openai = new OpenAI({
@@ -51,10 +50,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
     }
 
-    // Extract text from PDF
-    const buffer = await file.arrayBuffer();
-    const pdfData = await pdfParse(Buffer.from(buffer));
-    const resumeText = pdfData.text;
+    // Note: PDF text extraction moved to Convex action with OpenAI file upload
+    // This endpoint is deprecated in favor of the new processResumeWithStorage action
+    const resumeText = "";
 
     if (!resumeText.trim()) {
       return NextResponse.json({ error: "Could not extract text from PDF" }, { status: 400 });

@@ -21,7 +21,7 @@ AI-powered talent matching platform that connects AI engineers with recruiters u
 - **Backend**: Convex (database, real-time, auth)
 - **Authentication**: Clerk with role-based access
 - **AI**: OpenAI GPT-4o for parsing, text-embedding-3-small for vector search
-- **PDF Processing**: pdf-parse for text extraction
+- **PDF Processing**: OpenAI file upload for text extraction
 
 ## Local Development
 
@@ -104,7 +104,7 @@ AI-powered talent matching platform that connects AI engineers with recruiters u
 - **messages**: Intro requests between recruiters and candidates
 
 ### AI Pipeline
-1. **PDF → Text**: Extract text using pdf-parse
+1. **PDF → Text**: Extract text using OpenAI file upload
 2. **Text → Structured Data**: GPT-4o function calling for skill extraction
 3. **Text → Embeddings**: text-embedding-3-small for semantic search
 4. **Scoring**: Nightly cron job using GPT-4o to rate candidates (0-100)
